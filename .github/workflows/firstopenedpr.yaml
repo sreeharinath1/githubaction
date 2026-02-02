@@ -1,0 +1,10 @@
+name: pullrequest by opened
+on:
+  pull_request:
+    types: [ opened ]
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Greet Contributor
+        run: echo "Hello Thanks for opening first PR in this Repo."
