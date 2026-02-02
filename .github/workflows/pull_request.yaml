@@ -1,16 +1,14 @@
-name: Pull Request Workflow
+name: Pull Request Events Demo
 
 on:
   pull_request:
     branches:
-      - main   # runs when PR targets main
+      - main
+    types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
-  check:
+  demo:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Run tests
-        run: echo "Here you run your tests"
+      - name: Show event type
+        run: echo "Triggered by ${{ github.event.action }}"
