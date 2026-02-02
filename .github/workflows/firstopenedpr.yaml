@@ -1,4 +1,4 @@
-name: pullrequest by opened and dev
+name: pullrequest by opened and devs
 on:
   pull_request:
     types: [ opened ]
