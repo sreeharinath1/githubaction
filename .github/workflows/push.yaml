@@ -7,7 +7,7 @@ on:
     paths:
       - 'src/**'               # include all files in src/
       - '!src/experimental/**' # exclude experimental subfolder
-      - '!**.md'               # exclude markdown files
+      - '!docs/**.md'               # exclude markdown files
 
 jobs:
   build:
