@@ -5,9 +5,10 @@ on:
     branches:
       - main
     paths:
-      - 'src/**'               # include all files in src/
-      - '!src/experimental/**' # exclude experimental subfolder
-      - '!docs/**.md'               # exclude markdown files
+      - 'src/**'
+      - '!src/experimental/**'
+      - '!docs/**'       # excludes everything under docs/
+      - '!**.md'         # excludes all markdown files anywhere
 
 jobs:
   build:
