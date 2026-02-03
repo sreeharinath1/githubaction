@@ -3,6 +3,7 @@ on:
   workflow_dispatch:
 jobs:
   my-manual-trig-job:
+    runs-on: ubuntu-latest
     steps:
       - name: say Hi
         run: echo "Hi..."
