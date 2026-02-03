@@ -21,7 +21,7 @@ on:
           - debug
 jobs:
   my-manual-trig-job:
-    runs-on: selfhosted
+    runs-on: [self-hosted, linux, x64]
     steps:
       - name: say Hi
         run: echo "Hi..."
