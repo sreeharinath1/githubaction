@@ -10,6 +10,15 @@ on:
         description: 'nter tags'
         required: false
         default: boolean
+      logLevel:
+        description: 'entry for log'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+          - info
+          - warning
+          - debug
 jobs:
   my-manual-trig-job:
     runs-on: ubuntu-latest
