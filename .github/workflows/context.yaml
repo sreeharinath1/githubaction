@@ -14,6 +14,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Print GitHub Context
         run: |
@@ -38,14 +39,17 @@ jobs:
           echo "Job Status: ${{ job.status }}"
 
       - name: Use Env Context
-        run: echo "Global Var: ${{ env.GLOBAL_VAR }}"
+        run: |
+          echo "Global Var: ${{ env.GLOBAL_VAR }}"
 
       - name: Step Output Example
         id: step1
-        run: echo "result=42" >> $GITHUB_OUTPUT
+        run: |
+          echo "result=42" >> $GITHUB_OUTPUT
 
       - name: Read Step Output
-        run: echo "Step1 result: ${{ steps.step1.outputs.result }}"
+        run: |
+          echo "Step1 result: ${{ steps.step1.outputs.result }}"
 
       - name: Expression Functions Demo
         run: |
@@ -68,3 +72,4 @@ jobs:
           echo "${{ toJSON(job) }}"
           echo "--- STEPS ---"
           echo "${{ toJSON(steps) }}"
+
