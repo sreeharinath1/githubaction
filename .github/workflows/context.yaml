@@ -52,13 +52,15 @@ jobs:
           echo "Step1 result: ${{ steps.step1.outputs.result }}"
 
       - name: Expression Functions Demo
+        env:
+          SAMPLE_JSON: '{"key":"value"}'
         run: |
           echo "Contains check: ${{ contains(github.ref, 'main') }}"
           echo "StartsWith check: ${{ startsWith(github.ref, 'refs/tags/') }}"
           echo "EndsWith check: ${{ endsWith(github.actor, 'bot') }}"
           echo "Formatted string: ${{ format('Hello {0}', github.actor) }}"
           echo "Vars JSON: ${{ toJSON(vars) }}"
-          echo "FromJSON parse: ${{ fromJSON('{\"key\":\"value\"}').key }}"
+          echo "FromJSON parse: ${{ fromJSON(env.SAMPLE_JSON).key }}"
 
       - name: Debugging Contexts
         run: |
