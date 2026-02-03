@@ -13,7 +13,6 @@ env:
 
 jobs:
   build:
-    # Use 'self-hosted' to run on your EC2, or 'ubuntu-latest' for GitHub-hosted
     runs-on: self-hosted
     steps:
       - name: Print GitHub Context
@@ -55,6 +54,7 @@ jobs:
           echo "EndsWith check: ${{ endsWith(github.actor, 'bot') }}"
           echo "Formatted string: ${{ format('Hello {0}', github.actor) }}"
           echo "Vars JSON: ${{ toJSON(vars) }}"
+          # --- FIXED LINE 42 BELOW ---
           echo "FromJSON parse: ${{ fromJSON('{"key":"value"}').key }}"
 
       - name: Debugging Contexts
