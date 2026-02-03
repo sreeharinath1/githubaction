@@ -13,7 +13,7 @@ env:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Print GitHub Context
         run: |
@@ -42,7 +42,7 @@ jobs:
 
       - name: Step Output Example
         id: step1
-        run: echo "result=42" >> "$GITHUB_OUTPUT"
+        run: echo "result=42" >> $GITHUB_OUTPUT
 
       - name: Read Step Output
         run: echo "Step1 result: ${{ steps.step1.outputs.result }}"
@@ -54,8 +54,7 @@ jobs:
           echo "EndsWith check: ${{ endsWith(github.actor, 'bot') }}"
           echo "Formatted string: ${{ format('Hello {0}', github.actor) }}"
           echo "Vars JSON: ${{ toJSON(vars) }}"
-          # --- FIXED LINE 42 BELOW ---
-          echo "FromJSON parse: ${{ fromJSON('{"key":"value"}').key }}"
+          echo "FromJSON parse: ${{ fromJSON('{\"key\":\"value\"}').key }}"
 
       - name: Debugging Contexts
         run: |
