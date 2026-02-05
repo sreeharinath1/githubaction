@@ -1,0 +1,33 @@
+name: dynamic matrix demo
+on:
+  workflow_dispatch:
+jobs:
+  generate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{steps.set-matrix.outputs.matrix}}
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+      - name: Read Node Version from file
+        run: |
+          MATRIX=$(cat node-version.json)
+          echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
+  build:
+    needs: generate-matrix
+    runs-on: ${{ matrix.os}}
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+      - name: setup node js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node}}
+          check-latest: true
+      - name: print info
+        run: |
+          echo "Build ${{matrix.os}}, nodeversion ${{matrix.node}}"
+          node -v
+          npm -v
+      - name: run test
+        run: echo "test passed"
