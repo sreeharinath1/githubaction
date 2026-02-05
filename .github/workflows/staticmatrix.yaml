@@ -17,7 +17,7 @@ jobs:
       uses: actions/setup-node@v4
     - name: print info
       run: |
-        echo "running on ${{matrix.os}} and node has  ${{matix.node}}"
+        echo "running on ${{matrix.os}} and node has  ${{matrix.node}}"
         node -v
         npm -v
     - name: run test
