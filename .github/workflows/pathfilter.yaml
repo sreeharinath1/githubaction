@@ -1,0 +1,51 @@
+name: Monorepo Path Filter Demo          # Workflow name shown in GitHub Actions UI
+
+on:
+  workflow_dispatch:                     # Trigger: manual run from Actions tab
+
+jobs:
+  changes:                               # First job: detect which folders changed
+    runs-on: ubuntu-latest               # Runner environment
+    outputs:                             # Expose results for downstream jobs
+      frontend: ${{ steps.filter.outputs.frontend }}  # Output flag for frontend changes
+      backend: ${{ steps.filter.outputs.backend }}    # Output flag for backend changes
+      docs: ${{ steps.filter.outputs.docs }}          # Output flag for docs changes
+    steps:
+      - uses: actions/checkout@v4        # Step 1: checkout repo so we can inspect files
+
+      - name: Detect changed paths
+        id: filter
+        uses: dorny/paths-filter@v3      # Step 2: use community action to detect file changes
+        with:
+          filters: |                     # Define filters for different folders
+            frontend: 'frontend/**'      # Flag true if any file under frontend/ changed
+            backend: 'backend/**'        # Flag true if any file under backend/ changed
+            docs: 'docs/**'              # Flag true if any file under docs/ changed
+
+  frontend-job:                          # Job for frontend service
+    needs: changes                       # Depends on changes job
+    if: needs.changes.outputs.frontend == 'true'  # Run only if frontend changed
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "✅ Frontend changed, running frontend build/tests..."  # Example step
+
+  backend-job:                           # Job for backend service
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'   # Run only if backend changed
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "✅ Backend changed, running backend build/tests..."   # Example step
+
+  docs-job:                              # Job for docs
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'      # Run only if docs changed
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "📖 Docs changed, running docs checks..."              # Example step
+
+  required-check:                        # Wrapper job for branch protection
+    needs: [frontend-job, backend-job, docs-job]  # Runs after all jobs
+    if: always()                         # Always runs, even if others skipped
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "All relevant jobs completed or skipped. ✅"           # Marks success
