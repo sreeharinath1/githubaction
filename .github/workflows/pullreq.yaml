@@ -1,0 +1,80 @@
+name: Conditional Jobs Demo
+
+on:
+  workflow_dispatch:
+
+jobs:
+  # 1. Always runs
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Building project..."
+
+  # 2. Run only on main branch
+  deploy-main:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - run: echo "Deploying only on main branch"
+
+  # 3. Run only on pull requests
+  test-pr:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - run: echo "Running tests only for PRs"
+
+  # 4. Run only if previous job succeeded
+  notify-success:
+    runs-on: ubuntu-latest
+    needs: build
+    if: success()
+    steps:
+      - run: echo "Notify: Build succeeded"
+
+  # 5. Run only if previous job failed
+  notify-failure:
+    runs-on: ubuntu-latest
+    needs: build
+    if: failure()
+    steps:
+      - run: echo "Notify: Build failed"
+
+  # 6. Run only if previous job was cancelled
+  notify-cancelled:
+    runs-on: ubuntu-latest
+    needs: build
+    if: cancelled()
+    steps:
+      - run: echo "Notify: Build was cancelled"
+
+  # 7. Always run regardless of previous job status
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: build
+    if: always()
+    steps:
+      - run: echo "Cleanup runs even if build failed or was cancelled"
+
+  # 8. Run only if branch name contains 'release'
+  release-check:
+    runs-on: ubuntu-latest
+    if: contains(github.ref, 'release')
+    steps:
+      - run: echo "This job runs only on release branches"
+
+  # 9. Run only if triggered by a specific actor
+  actor-check:
+    runs-on: ubuntu-latest
+    if: github.actor == 'sreeharinath'
+    steps:
+      - run: echo "This job runs only if triggered by octocat"
+
+  # 10. Combined condition: main branch AND build success
+  deploy-prod:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && success()
+    steps:
+      - run: echo "Production deploy only if build succeeded on main branch"
