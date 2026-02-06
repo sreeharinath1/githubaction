@@ -1,0 +1,23 @@
+name: Dispatch Cache
+on:
+  workflow_dispatch:
+    inputs:
+      cacheKey:
+        description: "Custum cache key"
+        required: true
+        default: "default-cache"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+      - name: Cache deps with dispatch input
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: manual-${{github.event.inputs.cacheKey}}
+          restore-keys: |
+            manual-
+      - run: npm install
+      - run: echo "Testing"
