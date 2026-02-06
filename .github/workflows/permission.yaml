@@ -5,7 +5,7 @@ on:
 
 # 🔒 Global permissions (adjust these to test effects)
 permissions:
-  Output read            # can read workflow metadata
+  actions: read            # can read workflow metadata
   checks: write            # can create/update check runs
   contents: read           # can read repo content
   deployments: write       # can create/update deployments
