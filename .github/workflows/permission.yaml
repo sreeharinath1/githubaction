@@ -1,0 +1,47 @@
+name: Permissions Demo
+
+on:
+  workflow_dispatch:   # run manually from GitHub Actions UI
+
+# 🔒 Global permissions (adjust these to test effects)
+permissions:
+  actions: read            # can read workflow metadata
+  checks: write            # can create/update check runs
+  contents: read           # can read repo content
+  deployments: write       # can create/update deployments
+  id-token: write          # can generate OIDC tokens
+  issues: write            # can create/update issues
+  discussions: write       # can manage discussions
+  packages: read           # can pull packages
+  pull-requests: write     # can comment/update PRs
+  repository-projects: read # can read project boards
+  security-events: write   # can upload SARIF results
+  statuses: write          # can update commit statuses
+
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Show workflow metadata (actions: read)
+        run: echo "Workflow metadata is accessible"
+
+      - name: Post commit status (statuses: write)
+        run: |
+          echo "Posting commit status..."
+          # Normally you'd use gh api or curl here to set status
+
+      - name: Create issue if tests fail (issues: write)
+        run: |
+          echo "Creating issue via API..."
+          # Example: gh issue create --title "Test Failure" --body "Details"
+
+      - name: Comment on PR (pull-requests: write)
+        run: |
+          echo "Commenting on PR..."
+          # Example: gh pr comment 1 --body "Lint passed ✅"
+
+      - name: Upload SARIF (security-events: write)
+        run: echo "Would upload SARIF results here"
