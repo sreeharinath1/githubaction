@@ -5,7 +5,7 @@ on:
 
 # 🔒 Global permissions (adjust these to test effects)
 permissions:
-  actions: read            # can read workflow metadata
+  Output read            # can read workflow metadata
   checks: write            # can create/update check runs
   contents: read           # can read repo content
   deployments: write       # can create/update deployments
@@ -25,23 +25,23 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Show workflow metadata (actions: read)
+      - name: Show workflow metadata (Output read)
         run: echo "Workflow metadata is accessible"
 
-      - name: Post commit status (statuses: write)
+      - name: Post commit status (statuses write)
         run: |
           echo "Posting commit status..."
           # Normally you'd use gh api or curl here to set status
 
-      - name: Create issue if tests fail (issues: write)
+      - name: Create issue if tests fail (issues write)
         run: |
           echo "Creating issue via API..."
           # Example: gh issue create --title "Test Failure" --body "Details"
 
-      - name: Comment on PR (pull-requests: write)
+      - name: Comment on PR (pull-requests write)
         run: |
           echo "Commenting on PR..."
           # Example: gh pr comment 1 --body "Lint passed ✅"
 
-      - name: Upload SARIF (security-events: write)
+      - name: Upload SARIF (security-events write)
         run: echo "Would upload SARIF results here"
