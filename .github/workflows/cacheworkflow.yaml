@@ -1,0 +1,18 @@
+name: workflow level cache demo
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache on workflow
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: workflow-node-${{ github.ref }}
+          restore-keys: |
+            workflow-node-
+      - run: npm install 
+      - run: echo "Testing......"
