@@ -31,7 +31,7 @@ jobs:
     needs: build
     if: success()
     steps:
-      - run: echo "Notify: Build succeeded"
+      - run: echo "Output Build succeeded"
 
   # 5. Run only if previous job failed
   notify-failure:
@@ -39,7 +39,7 @@ jobs:
     needs: build
     if: failure()
     steps:
-      - run: echo "Notify: Build failed"
+      - run: echo "Output Build failed"
 
   # 6. Run only if previous job was cancelled
   notify-cancelled:
@@ -47,7 +47,7 @@ jobs:
     needs: build
     if: cancelled()
     steps:
-      - run: echo "Notify: Build was cancelled"
+      - run: echo "Output Build was cancelled"
 
   # 7. Always run regardless of previous job status
   cleanup:
@@ -78,3 +78,4 @@ jobs:
     if: github.ref == 'refs/heads/main' && success()
     steps:
       - run: echo "Production deploy only if build succeeded on main branch"
+
