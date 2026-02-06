@@ -1,19 +1,19 @@
 {
-  "name": "my-app",                // Project name
-  "version": "1.0.0",              // Project version
+  "name": "my-app",
+  "version": "1.0.0",
   "description": "Example Node.js project with npm install",
-  "main": "index.js",              // Entry point file
+  "main": "index.js",
   "scripts": {
-    "start": "node index.js",      // Run app with `npm start`
+    "start": "node index.js",
     "test": "echo \"No tests yet\" && exit 0"
   },
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.18.2",          // Example runtime dependency
-    "lodash": "^4.17.21"           // Another runtime dependency
+    "express": "^4.18.2",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "jest": "^29.7.0"              // Example dev dependency for testing
+    "jest": "^29.7.0"
   }
 }
