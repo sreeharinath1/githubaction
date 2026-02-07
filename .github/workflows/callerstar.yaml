@@ -13,7 +13,7 @@ jobs:
       - name: download artifact
         uses: actions/download-artifact@v4
         with:
-          name: showstar
+          name: star-art
       - name: show star
         run: cat output.txt
   
