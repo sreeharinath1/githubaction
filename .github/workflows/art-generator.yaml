@@ -1,0 +1,36 @@
+name: ASCII Art Generator
+
+on:
+  workflow_call:               # 👈 Makes this workflow reusable
+    inputs:
+      script_name:             # 👈 Caller must provide which script to run
+        description: "The script to execute (diamond.sh or star.sh)"
+        required: true
+        type: string
+    outputs:                   # 👈 Define outputs that caller can consume
+      art_file:
+        description: "The filename of the generated art"
+        value: ${{ jobs.generate.outputs.filename }}
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest     # 👈 Standard runner
+    outputs:
+      filename: ${{ steps.set-out.outputs.fname }}  # 👈 Pass filename to caller
+    steps:
+      - uses: actions/checkout@v4   # 👈 Checkout repo to access scripts
+
+      - name: Generate Art
+        run: |                  # 👈 Run the chosen script and redirect output
+          chmod +x ./scripts/${{ inputs.script_name }}
+          ./scripts/${{ inputs.script_name }} > output.txt
+
+      - name: Set Output for Caller
+        id: set-out
+        run: echo "fname=output.txt" >> "$GITHUB_OUTPUT"  # 👈 Save filename as output
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4   # 👈 Store the art file for later download
+        with:
+          name: ${{ inputs.script_name }}-art
+          path: output.txt
