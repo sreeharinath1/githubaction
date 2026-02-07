@@ -1,20 +1,81 @@
-name: Matrix with Environment Gates
+name: Merged Dynamic + Matrix Pipeline
 
 on:
+  push:
+    branches:
+      - main
+      - develop
+      - feature/**
   workflow_dispatch:
+    inputs:
+      script_name:
+        description: "Script to run (manual only)"
+        required: true
+        type: choice
+        options:
+          - diamond.sh
+          - star.sh
+          - both
 
 jobs:
-  generate:
+  # 1️⃣ Decide environment + script
+  select-context:
+    runs-on: ubuntu-latest
+    outputs:
+      env: ${{ steps.set-env.outputs.env }}
+      script: ${{ steps.set-script.outputs.script }}
+    steps:
+      - id: set-env
+        run: |
+          if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
+            echo "env=production" >> $GITHUB_OUTPUT
+          elif [[ "${GITHUB_REF}" == "refs/heads/develop" ]]; then
+            echo "env=staging" >> $GITHUB_OUTPUT
+          else
+            echo "env=test" >> $GITHUB_OUTPUT
+          fi
+
+      - id: set-script
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "script=${{ inputs.script_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "script=diamond.sh" >> $GITHUB_OUTPUT
+          fi
+
+  # 2️⃣ Matrix execution using reusable workflow
+  run-generator:
+    needs: select-context
     strategy:
       matrix:
         target:
-          - env: test
-            script: diamond.sh
-          - env: prod
-            script: both
+          - script: ${{ needs.select-context.outputs.script }}
+            env: ${{ needs.select-context.outputs.env }}
 
     uses: sreeharinath1/githubaction/.github/workflows/art-generator.yaml@main
     with:
       script_name: ${{ matrix.target.script }}
       env_name: ${{ matrix.target.env }}
+
+  # 3️⃣ Collect & print result
+  process-result:
+    needs:
+      - select-context
+      - run-generator
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Result
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.select-context.outputs.script }}-art
+
+      - name: Show Context & Art
+        run: |
+          echo "================================="
+          echo " Environment : ${{ needs.select-context.outputs.env }}"
+          echo " Script      : ${{ needs.select-context.outputs.script }}"
+          echo " Branch      : ${{ github.ref_name }}"
+          echo "================================="
+          echo ""
+          cat output.txt
 
