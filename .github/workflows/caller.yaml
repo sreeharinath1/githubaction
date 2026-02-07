@@ -1,4 +1,4 @@
-name: Main Pipeline
+name: caller both Pipeline
 
 on:
   workflow_dispatch:
