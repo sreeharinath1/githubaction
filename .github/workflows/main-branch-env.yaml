@@ -51,6 +51,7 @@ jobs:
 
   process-result:
     needs: call-generator
+    needs: select-env
     runs-on: ubuntu-latest
     steps:
       - name: Download Result
