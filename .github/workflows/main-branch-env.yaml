@@ -50,8 +50,9 @@ jobs:
       env_name: ${{ needs.select-env.outputs.env }}
 
   process-result:
-    needs: call-generator
-    needs: select-env
+    needs: 
+      - call-generator
+      - select-env
     runs-on: ubuntu-latest
     steps:
       - name: Download Result
