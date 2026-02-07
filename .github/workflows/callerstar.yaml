@@ -1,0 +1,19 @@
+name: caller star pipeline
+on:
+  workflow_dispatch:
+jobs:
+  gen:
+    uses: sreeharinath1/githubaction/.github/workflows/generator.yaml@main
+    with:
+      script_name: star.sh
+  out:
+    needs: gen
+    runs-on: ubuntu-latest
+    steps:
+      - name: download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: showstar
+      - name: show star
+        run: cat output.txt
+  
