@@ -3,7 +3,7 @@ name: Tag Based Release Pipeline
 on:
   push:
     tags:
-      - v*              # Triggers only when tags like v1.0.0 are pushed
+      - v*              # Trigger only when tags like v1.0.0 are pushed
 
 permissions:
   contents: read
