@@ -1,7 +1,7 @@
 name: Branch Based Environment
 
 on:
-  push:
+  workflow_dispatch:
     branches:
       - main
       - develop
