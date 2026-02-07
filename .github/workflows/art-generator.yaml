@@ -4,33 +4,20 @@ on:
   workflow_call:
     inputs:
       script_name:
-        description: "The script to execute (diamond.sh or star.sh)"
         required: true
         type: string
-    outputs:
-      art_file:
-        description: "The filename of the generated art"
-        value: ${{ jobs.generate.outputs.filename }}
 
 jobs:
   generate:
     runs-on: ubuntu-latest
-    outputs:
-      filename: ${{ steps.set-out.outputs.fname }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Generate Art
-        run: |
+      - run: |
           chmod +x ./scripts/${{ inputs.script_name }}
           ./scripts/${{ inputs.script_name }} > output.txt
 
-      - name: Set Output for Caller
-        id: set-out
-        run: echo "fname=output.txt" >> "$GITHUB_OUTPUT"
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.script_name }}-art
           path: output.txt

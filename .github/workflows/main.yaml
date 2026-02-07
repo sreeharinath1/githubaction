@@ -13,13 +13,9 @@ jobs:
     needs: call-generator
     runs-on: ubuntu-latest
     steps:
-      - name: Download Result
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           name: diamond.sh-art
 
-      - name: Show Art
-        run: |
-          echo "Generated ASCII art:"
-          cat output.txt
+      - run: cat output.txt
 
