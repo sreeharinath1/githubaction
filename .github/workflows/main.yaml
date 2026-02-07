@@ -8,8 +8,6 @@ jobs:
     uses: sreeharinath1/githubaction/.github/workflows/art-generator.yaml@main
     with:
       script_name: "diamond.sh"
-    outputs:
-      art_file: ${{ steps.not-used.outputs.not-used }} # 👈 dummy (required workaround)
 
   process-result:
     needs: call-generator
@@ -20,6 +18,8 @@ jobs:
         with:
           name: diamond.sh-art
 
-      - name: Confirm success
-        run: echo "Artifact downloaded successfully"
+      - name: Show Art
+        run: |
+          echo "Generated ASCII art:"
+          cat output.txt
 
