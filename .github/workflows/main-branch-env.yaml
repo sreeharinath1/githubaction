@@ -1,0 +1,32 @@
+name: Branch Based Environment
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feature/**
+
+jobs:
+  select-env:
+    runs-on: ubuntu-latest
+    outputs:
+      env: ${{ steps.set-env.outputs.env }}
+    steps:
+      - id: set-env
+        run: |
+          if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
+            echo "env=production" >> $GITHUB_OUTPUT
+          elif [[ "${GITHUB_REF}" == "refs/heads/develop" ]]; then
+            echo "env=staging" >> $GITHUB_OUTPUT
+          else
+            echo "env=test" >> $GITHUB_OUTPUT
+          fi
+
+  call-generator:
+    needs: select-env
+    uses: sreeharinath1/githubaction/.github/workflows/art-generator.yaml@main
+    with:
+      script_name: "diamond.sh"
+      env_name: ${{ needs.select-env.outputs.env }}
+

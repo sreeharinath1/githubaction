@@ -1,0 +1,21 @@
+name: Prod Only Approval
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_env:
+        description: "Environment"
+        required: true
+        type: choice
+        options:
+          - test
+          - staging
+          - production
+
+jobs:
+  call-generator:
+    uses: sreeharinath1/githubaction/.github/workflows/art-generator.yaml@main
+    with:
+      script_name: "both"
+      env_name: ${{ inputs.target_env }}
+

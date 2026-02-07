@@ -1,0 +1,45 @@
+name: Enterprise Promotion Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "build-output" > app.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-artifact
+          path: app.txt
+
+  deploy-test:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: test
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-artifact
+      - run: echo "Deploying to TEST"
+
+  deploy-staging:
+    needs: deploy-test
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-artifact
+      - run: echo "Deploying to STAGING"
+
+  deploy-prod:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production   # 🛑 Manual approval here
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-artifact
+      - run: echo "Deploying to PRODUCTION"
+

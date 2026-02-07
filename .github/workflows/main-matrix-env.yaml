@@ -1,0 +1,20 @@
+name: Matrix with Environment Gates
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    strategy:
+      matrix:
+        target:
+          - env: test
+            script: diamond.sh
+          - env: prod
+            script: both
+
+    uses: sreeharinath1/githubaction/.github/workflows/art-generator.yaml@main
+    with:
+      script_name: ${{ matrix.target.script }}
+      env_name: ${{ matrix.target.env }}
+
