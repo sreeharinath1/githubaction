@@ -1,0 +1,24 @@
+name: Main Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  call-generator:
+    uses: sreeharinath1/githubaction/.github/workflows/art-generator.yaml@main
+    with:
+      script_name: "both"   # 👈 choose "diamond.sh", "star.sh", or "both"
+
+  process-result:
+    needs: call-generator
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Result
+        uses: actions/download-artifact@v4
+        with:
+          name: both-art
+
+      - name: Show Art
+        run: |
+          echo "Generated ASCII art:"
+          cat output.txt
