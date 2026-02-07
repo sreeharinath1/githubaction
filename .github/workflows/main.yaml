@@ -1,24 +1,23 @@
 name: Main Pipeline
 
 on:
-  workflow_dispatch:           # 👈 Manual trigger
+  workflow_dispatch:
 
 jobs:
   call-generator:
-    # 👈 Call the reusable workflow, pinned to a branch or commit SHA
     uses: sreeharinath1/githubaction/.github/workflows/art-generator.yaml@main
     with:
-      script_name: "diamond.sh"   # 👈 Input passed to reusable workflow
+      script_name: "diamond.sh"
 
   process-result:
-    needs: call-generator      # 👈 Wait until generator job finishes
+    needs: call-generator
     runs-on: ubuntu-latest
     steps:
       - name: Download Result
-        uses: actions/download-artifact@v4   # 👈 Retrieve artifact created earlier
+        uses: actions/download-artifact@v4
         with:
           name: diamond.sh-art
 
       - name: Print the Output Path
         run: echo "The reusable workflow created: ${{ needs.call-generator.outputs.art_file }}"
-        # 👈 Show the filename returned as an output
+
