@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@17e5d0b6c9ed08c228f3b456f100659e08499a2c
 
       - name: Run diamond script
         run: |
