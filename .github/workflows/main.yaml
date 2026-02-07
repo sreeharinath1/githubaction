@@ -6,7 +6,7 @@ on:
 jobs:
   call-generator:
     # 👈 Call the reusable workflow, pinned to a commit SHA for security
-    uses: myorg/myrepo/.github/workflows/art-generator.yml@a1b2c3d4e5f6
+    uses: sreeharinath1/githubaction/actions/workflows/art-generator.yaml
     with:
       script_name: "diamond.sh"   # 👈 Input passed to reusable workflow
 
