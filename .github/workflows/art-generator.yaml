@@ -4,10 +4,11 @@ on:
   workflow_call:
     inputs:
       script_name:
-        description: "Script to Execute"
+        description: "Script to Execute (diamond.sh | star.sh | both)"
         required: true
         type: string
       env_name:
+        description: "Target environment (test | staging | production)"
         required: true
         type: string
     outputs:
@@ -18,10 +19,13 @@ on:
 jobs:
   generate:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.env_name }}   # 🔐 Environment Gate (approval happens here)
     outputs:
       filename: ${{ steps.set-out.outputs.fname }}
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Generate ASCII Art
         run: |
@@ -29,18 +33,22 @@ jobs:
 
           if [ "${{ inputs.script_name }}" = "diamond.sh" ]; then
             ./scripts/diamond.sh > output.txt
+
           elif [ "${{ inputs.script_name }}" = "star.sh" ]; then
             ./scripts/star.sh > output.txt
+
           elif [ "${{ inputs.script_name }}" = "both" ]; then
             ./scripts/diamond.sh > diamond.txt
             ./scripts/star.sh > star.txt
             cat diamond.txt star.txt > output.txt
+
           else
-            echo "Invalid script_name input"
+            echo "❌ Invalid script_name input"
             exit 1
           fi
 
-      - id: set-out
+      - name: Set output filename
+        id: set-out
         run: echo "fname=output.txt" >> "$GITHUB_OUTPUT"
 
       - name: Upload Artifact

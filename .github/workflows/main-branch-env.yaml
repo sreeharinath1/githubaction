@@ -1,17 +1,28 @@
-name: Branch Based Environment
+name: Dynamic Caller Pipeline
 
 on:
-  workflow_dispatch:
+  push:
     branches:
       - main
       - develop
       - feature/**
+  workflow_dispatch:
+    inputs:
+      script_name:
+        description: "Script to run"
+        required: true
+        type: choice
+        options:
+          - diamond.sh
+          - star.sh
+          - both
 
 jobs:
   select-env:
     runs-on: ubuntu-latest
     outputs:
       env: ${{ steps.set-env.outputs.env }}
+      script: ${{ steps.set-script.outputs.script }}
     steps:
       - id: set-env
         run: |
@@ -23,10 +34,37 @@ jobs:
             echo "env=test" >> $GITHUB_OUTPUT
           fi
 
+      - id: set-script
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "script=${{ inputs.script_name }}" >> $GITHUB_OUTPUT
+          else
+            echo "script=diamond.sh" >> $GITHUB_OUTPUT
+          fi
+
   call-generator:
     needs: select-env
     uses: sreeharinath1/githubaction/.github/workflows/art-generator.yaml@main
     with:
-      script_name: "diamond.sh"
+      script_name: ${{ needs.select-env.outputs.script }}
       env_name: ${{ needs.select-env.outputs.env }}
+
+  process-result:
+    needs: call-generator
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Result
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.select-env.outputs.script }}-art
+
+      - name: Show Environment & Art
+        run: |
+          echo "================================="
+          echo " Environment : ${{ needs.select-env.outputs.env }}"
+          echo " Script      : ${{ needs.select-env.outputs.script }}"
+          echo "================================="
+          echo ""
+          echo "Generated ASCII art:"
+          cat output.txt
 
