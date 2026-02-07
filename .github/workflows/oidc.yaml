@@ -2,7 +2,7 @@ name: OIDC workflow demo
 on:
   workflow_dispatch:
 permissions:
-  id_token: write
+  id-token: write
   contents: read
 jobs:
   list-ec2:
