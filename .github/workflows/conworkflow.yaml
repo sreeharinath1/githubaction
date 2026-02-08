@@ -1,0 +1,11 @@
+name: workflow-concurrency demo
+on:
+  workflow_dispatch:
+concurrency:
+  group: ci-${{github.ref}}
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Building triggered manually for ${{github.ref}}"

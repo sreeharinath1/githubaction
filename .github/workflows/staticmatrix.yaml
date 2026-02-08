@@ -1,0 +1,34 @@
+name: Static-Matrix-Demo
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [18, 20, 22]
+      fail-fast: false
+
+    name: Build (${{ matrix.os }}, Node ${{ matrix.node }})
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          check-latest: true   # ensures correct version is installed
+
+      - name: Print Info
+        run: |
+          echo "Running on ${{ matrix.os }} with Node ${{ matrix.node }}"
+          node -v
+          npm -v
+
+      - name: Run Test
+        run: echo "test passed"

@@ -1,0 +1,24 @@
+name: Pull Request Workflow
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+    paths:
+      - 'src/**'               # include all files in src/
+      - '!src/experimental/**' # exclude experimental subfolder
+      - '!**.md'               # exclude markdown files
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show event type
+        run: echo "PR triggered by ${{ github.event.action }} with allowed file changes"

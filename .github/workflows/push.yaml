@@ -1,0 +1,20 @@
+name: Push Workflow
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - '!src/experimental/**'
+      - '!docs/**'       # excludes everything under docs/
+      - '!**.md'         # excludes all markdown files anywhere
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show trigger
+        run: echo "Push triggered by changes in allowed paths"

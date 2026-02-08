@@ -1,0 +1,30 @@
+name: Shapes Demo
+
+on:
+  workflow_dispatch:   # manual trigger
+
+permissions:
+  contents: read       # only need to read repo files
+
+jobs:
+  run-diamond:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@17e5d0b6c9ed08c228f3b456f100659e08499a2c
+
+      - name: Run diamond script
+        run: |
+          chmod +x diamond.sh
+          ./diamond.sh
+
+  run-star:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Run star script
+        run: |
+          chmod +x star.sh
+          ./star.sh

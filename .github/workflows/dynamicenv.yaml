@@ -1,0 +1,29 @@
+name: Deploy-Matrix-Demo
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        region: [us-east-1, eu-west-1, ap-south-1]
+        environment: [staging, production]
+      fail-fast: false
+
+    name: Deploy ${{ matrix.environment }} in ${{ matrix.region }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure Cloud CLI
+        run: |
+          echo "Configuring CLI for ${{ matrix.region }}"
+
+      - name: Deploy Application
+        run: |
+          echo "Deploying to ${{ matrix.environment }} in ${{ matrix.region }}"
+          # Example: aws deploy command
+          # aws deploy --region ${{ matrix.region }} --env ${{ matrix.environment }}

@@ -1,0 +1,17 @@
+name: Job-output demo
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - id: build-step
+        run: echo "id=2345" >> $GITHUB_OUTPUT
+    outputs:
+      build_id: ${{ steps.build-step.outputs.id }}
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - run: echo "Build ID was ${{ needs.build.outputs.build_id }}"
+

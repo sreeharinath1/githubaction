@@ -1,0 +1,27 @@
+name: manual trigger
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'enter env key'
+        required: true
+        default: 'staging'
+      tags:
+        description: 'nter tags'
+        required: false
+        default: boolean
+      logLevel:
+        description: 'entry for log'
+        required: true
+        default: 'warning'
+        type: choice
+        options:
+          - info
+          - warning
+          - debug
+jobs:
+  my-manual-trig-job:
+    runs-on: [self-hosted, Linux, X64]
+    steps:
+      - name: say Hi
+        run: echo "Hi..."

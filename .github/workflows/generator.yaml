@@ -1,0 +1,48 @@
+name: Reusable Workflow Generator
+
+on:
+  workflow_call:
+    inputs:
+      script_name:
+        description: "Script to Execute"
+        required: true
+        type: string
+    outputs:
+      art_file:
+        description: "Generated art filename"
+        value: ${{ jobs.generate.outputs.filename }}
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    outputs:
+      filename: ${{ steps.set-out.outputs.fname }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate ASCII Art
+        run: |
+          chmod +x ./scripts/*.sh
+
+          if [ "${{ inputs.script_name }}" = "diamond.sh" ]; then
+            ./scripts/diamond.sh > output.txt
+          elif [ "${{ inputs.script_name }}" = "star.sh" ]; then
+            ./scripts/star.sh > output.txt
+          elif [ "${{ inputs.script_name }}" = "both" ]; then
+            ./scripts/diamond.sh > diamond.txt
+            ./scripts/star.sh > star.txt
+            cat diamond.txt star.txt > output.txt
+          else
+            echo "Invalid script_name input"
+            exit 1
+          fi
+
+      - id: set-out
+        run: echo "fname=output.txt" >> "$GITHUB_OUTPUT"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.script_name }}-art
+          path: output.txt
+

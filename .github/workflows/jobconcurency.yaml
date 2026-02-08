@@ -1,0 +1,18 @@
+name: job-level concurrency demo
+on:
+  workflow_dispatch:
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ci-${{github.ref}}
+      cancel-in-progress: true
+    steps:
+      - run: echo "Deploying frontend by manual trigger"
+  backend:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: cd-${{github.ref}}
+      cancel-in-progress: false
+    steps:
+      - run: echo "Deploying backend by manual trigger"

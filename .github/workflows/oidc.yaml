@@ -1,0 +1,21 @@
+name: OIDC workflow demo
+on:
+  workflow_dispatch:
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  list-ec2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: configure aws credential via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::242254662941:role/my-github-token
+          aws-region: ap-south-1
+      - name: list ec2 instances in mumbai
+        run: aws ec2 describe-instances --region ap-south-1
+
