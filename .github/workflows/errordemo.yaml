@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 env:
-  REQUIRED_VAR: ""
+  REQUIRED_VAR: ""   # intentionally empty to trigger error
 
 jobs:
   annotations-demo:
@@ -38,29 +38,27 @@ jobs:
           echo "::warning::This is a sample warning, build will continue"
 
       # ------------------------------
-      # Step 4: File + line warning
+      # Step 4: File + line warning (FIXED)
       # ------------------------------
       - name: File-based warning
         run: |
-          echo "::warning file=.github/workflows/annotations.yml,line=1,col=1::Check workflow naming convention"
+          echo "::warning file=.github/workflows/errordemo.yaml,line=1,col=1::Check workflow naming convention"
 
       # ------------------------------
-      # Step 5: Conditional validation
+      # Step 5: Conditional validation (ERROR)
       # ------------------------------
       - name: Validate environment variable
         run: |
           if [ -z "$REQUIRED_VAR" ]; then
-            echo "::error::REQUIRED_VAR is missing"
+            echo "::error file=.github/workflows/errordemo.yaml,line=23,col=1::REQUIRED_VAR is missing"
             exit 1
           fi
 
       # ------------------------------
-      # Step 6: Multiline error example
-      # (This step will NOT execute
-      # because previous step fails)
+      # Step 6: Multiline error
+      # (will not execute)
       # ------------------------------
       - name: Multiline error
         run: |
           echo "::error::Validation failed%0ARequired variable not found%0AStopping pipeline"
           exit 1
-
