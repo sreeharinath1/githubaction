@@ -1,0 +1,25 @@
+name: Repo Dispatch Pipeline
+
+on:
+  repository_dispatch:
+    types: [deploy]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print payload
+        run: |
+          echo "Environment: ${{ github.event.client_payload.environment }}"
+          echo "Version: ${{ github.event.client_payload.version }}"
+
+      - name: Conditional deploy
+        run: |
+          if [ "${{ github.event.client_payload.environment }}" = "prod" ]; then
+            echo "Deploying to production"
+          else
+            echo "Deploying to non-prod"
+          fi
+
+
+
