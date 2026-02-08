@@ -1,0 +1,66 @@
+name: Annotation Complete Demo
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+  workflow_dispatch:
+
+env:
+  REQUIRED_VAR: ""
+
+jobs:
+  annotations-demo:
+    name: GitHub Actions Annotations
+    runs-on: ubuntu-latest
+
+    steps:
+      # ------------------------------
+      # Step 1: Checkout
+      # ------------------------------
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ------------------------------
+      # Step 2: Notice annotation
+      # ------------------------------
+      - name: Show notice
+        run: |
+          echo "::notice::Workflow started successfully"
+
+      # ------------------------------
+      # Step 3: Warning annotation
+      # ------------------------------
+      - name: Show warning
+        run: |
+          echo "::warning::This is a sample warning, build will continue"
+
+      # ------------------------------
+      # Step 4: File + line warning
+      # ------------------------------
+      - name: File-based warning
+        run: |
+          echo "::warning file=.github/workflows/annotations.yml,line=1,col=1::Check workflow naming convention"
+
+      # ------------------------------
+      # Step 5: Conditional validation
+      # ------------------------------
+      - name: Validate environment variable
+        run: |
+          if [ -z "$REQUIRED_VAR" ]; then
+            echo "::error::REQUIRED_VAR is missing"
+            exit 1
+          fi
+
+      # ------------------------------
+      # Step 6: Multiline error example
+      # (This step will NOT execute
+      # because previous step fails)
+      # ------------------------------
+      - name: Multiline error
+        run: |
+          echo "::error::Validation failed%0ARequired variable not found%0AStopping pipeline"
+          exit 1
+
